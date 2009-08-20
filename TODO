@@ -1,0 +1,30 @@
+server:setup
+    create a shared folder
+    create a backup folder if it does not exist
+
+
+db:backup
+    - not implimented
+
+get_file
+    - not implimented
+
+remote_run
+    - allow :symbols in lines so we can do "cd :deploy_to" instead of "cd #{@settings['deploy_to']}
+
+bootstrap
+    - test
+
+app:maintence
+    - adds a maintence.html in public (use erb template)
+
+app:restart
+    - curl app to fire up (slow) first passenger instance
+
+tests
+    - ssh to localhost and deploy_to is a path in tmp?
+    - run tasks then check for existance of files
+
+
+other
+    - grit to generate info file and check if an update/commit etc is actually needed

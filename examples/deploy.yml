@@ -1,0 +1,12 @@
+development:
+  app_name: silverfox
+  environment: demo
+  ssh_cmd: ssh user@domain.com
+  deploy_to: /home/user/sites/:app_name/:environment
+  git_uri: ~/git/silverfox
+  git_repos: master
+
+production:
+  <<: *development
+  environment: production
+  pretend: true
