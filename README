@@ -1,11 +1,11 @@
-Git by Proxy
-============
+RAKE Deploy
+===========
 
 == Description
 
-Simple rake tasks to rope in a graphic designer who doesn't want to use version control and (S)FTP's stuff up to the server instead (eg. file in the public and views folders). Includes multi environment deployment. But is intended to be used for collaborating on the staging version of a website. 
-It also adds a copy of all existing rake tasks to the 'server' namespace with the exception that they are run on the server instead of locally.
-This allows us to quickly deploy and bootstrap our application. For example "rake server:db:create" will create the database on the server.
+Simple RAKE tasks to manage code, data and files on a remote server over ssh.
+
+Run any rake task on the remote server.
 
 Made to scratch my own itch.
 
@@ -15,40 +15,28 @@ License: GNU
 
 == Installation ==
 
-From RAILS_ROOT: git clone git://github.com/krisleech/Git-By-Proxy.git vendor/plugins/git_by_proxy
+
 
 == Assumptions ==
 
 Your using RubyOnRails
 You login in to the server with a ssh key
-Your using git and mod_rails
+Your using git, passenger and MySQL
 Your on POSIX operating system (tested on Ubuntu/Mac)
 
 == Getting Started ==
 
 Create deploy.yml in 'config' folder with server_environment settings (see example)
 rake server:setup
-rake server:deploy 
+rake server:deploy
+rake server:code:pull
+rake server:database:backup
 
 NB: It would be wise to set 'pretend' to true and see what commands will be executed before running this on a live server
 
-== Other tasks/examples ==
-
-rake server:setup RAILS_ENV=production
-rake server:deploy RAILS_ENV=production
-rake server:get_ui 
-rake server:restart_app (assumes passenger)
-rake server:update_code
-
 == Todo ==
 
-Can this be done better, please fork/suggest...
-Better name/description
-Extract more in to deploy.yml for configurability
 Add a symlinked shared folder of non-versioned files (eg. user uploads)
-Add cleanup task to remove old 'backups'
-Is there a way to automatically run 'server_environment' dependancy...
-Add logging on client and server side
 
 == Alternatives ==
 

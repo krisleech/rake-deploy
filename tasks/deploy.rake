@@ -1,9 +1,9 @@
 # Please view README before using
-# RDEPLOY
+# RAKE DEPLOY
 
 ######################
 
-task :local_settings => [:environment] do
+task :load_settings => [:environment] do
    
   deploy_file = File.join(RAILS_ROOT, 'config', 'deploy.yml')
   raise "#{deploy_file} missing" unless File.exists? deploy_file
@@ -15,8 +15,7 @@ task :local_settings => [:environment] do
   @settings['git_repos'] ||= 'master'
   @settings['pretend'] ||= false
   @settings['compress_cmd'] ||= "zip -9r :dest.zip :src -x ':src/.git/*'"
-  inject_symbol_values(@settings)
-  
+  inject_symbol_values(@settings)  
 end
 
 # replace any symbols in string values with other values from the settings file
@@ -40,7 +39,7 @@ end
 
 #### APP ####
 
-# Restart application (mod_rails)
+# Restart application
 namespace :app do
   task :restart => [:environment] do
     run "touch #{RAILS_ROOT}/tmp/restart.txt"
@@ -61,7 +60,7 @@ end
 #### CODE ####
 
 namespace :code do
-  task :push => [:load_control_settings] do
+  task :push => [:load_settings] do
     run "git push origin #{@settings['git_repos']}"
   end
 
@@ -102,7 +101,7 @@ namespace :server do
         inject_symbol_values(@settings)
   end
 
-  # replace any symbols in string values with other values from the settings file
+    # replace any symbols in string values with other values from the settings file
     def inject_symbol_values(settings)
       %w(deploy_to remote_backup_path).each do |target_key|
         settings.each do |source_key,source_value|
@@ -131,6 +130,7 @@ namespace :server do
       "cd #{@settings['deploy_to']}",
       "touch ../#{@settings['app_name']}_#{@settings['environment']}_last_deploy.txt",
       "git init",
+      "git submodule init",
       "git remote add origin #{@settings['git_uri']}"
       ]
   end
@@ -148,13 +148,11 @@ namespace :server do
   desc 'Update code on server with latest from git'
   task :update_code => [:server_environment] do
     remote_task 'code:pull'
-#    remote_run ["cd #{@settings['deploy_to']}", "git pull origin #{@settings['git_repos']}"]
   end 
 
   desc 'Pull the UI changes in to git'
   task :get_ui => [:server_environment] do
     remote_task 'code:commit_and_push'
-#    remote_run ["cd #{@settings['deploy_to']}", "git add .", "git commit -m 'UI Changes (via FTP)'", "git push"]
     puts "You now need to pull these changes (if any) from git to get them locally"
   end    
   
